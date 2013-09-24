@@ -1,0 +1,34 @@
+body {
+    margin-left: 15px;
+    margin-right: 15px;
+    min-height: 200px;
+    border: 1px solid blue;
+}
+
+.content {
+    font-size: 1.4em;
+}
+
+.header {
+    background: rgb(230,230,230);
+    border-right: thin solid rgb(180,180,180);
+    border-bottom: thin solid rgb(180,180,180);
+    padding: 0.2em;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.subheader {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+a:hover {
+    background: silver;
+}
+
+#logo {
+    position: relative;
+    float: right;
+    top: 50px;
+}
