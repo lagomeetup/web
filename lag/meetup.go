@@ -2,17 +2,14 @@
 package lag
 
 import (
-	"fmt"
-	/*
-		"time"
-		"net/http"
-		"net/url"
-
-		"log"
-	*/
 	"encoding/json"
+	"fmt"
 	"io"
-	"os"
+	"net/url"
+	"time"
+
+	"appengine"
+	"appengine/urlfetch"
 )
 
 const (
@@ -21,16 +18,26 @@ const (
 	groupName = "Los-Angeles-Gophers"
 )
 
+var laLoc *time.Location
+
 type Meetup struct {
-	URL  string `json:"event_url"`
-	Name string `json:"name"`
-	Time int64  `json:"time"`
+	URL  string    `json:"event_url"`
+	Name string    `json:"name"`
+	Time time.Time `json:"time"`
+}
+
+func init() {
+	laLoc, _ = time.LoadLocation("America/Los_Angeles")
 }
 
 func parseJSON(in io.Reader) (*Meetup, error) {
 	dec := json.NewDecoder(in)
 	var reply struct {
-		Results []Meetup `json:"results"`
+		Results []struct {
+			URL  string `json:"event_url"`
+			Name string `json:"name"`
+			Time int64  `json:"time"`
+		}
 	}
 
 	if err := dec.Decode(&reply); err != nil {
@@ -41,35 +48,23 @@ func parseJSON(in io.Reader) (*Meetup, error) {
 		return nil, nil
 	}
 
-	return &reply.Results[0], nil
+	m := reply.Results[0]
+	t := time.Unix(m.Time/1000, 0)
+	if laLoc != nil {
+		t = t.In(laLoc)
+	}
+	return &Meetup{m.URL, m.Name, t}, nil
 }
 
-func main() {
-	/*
-		query := url.Values{"key": {key}, "group_urlname": {groupName}}
-		u := fmt.Sprintf("%s?%s", apiURL, query.Encode())
+func nextMeetup(ctx appengine.Context) (*Meetup, error) {
+	query := url.Values{"key": {key}, "group_urlname": {groupName}}
+	u := fmt.Sprintf("%s?%s", apiURL, query.Encode())
 
-		resp, err := http.Get(u)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer resp.Body.Close()
-
-		//t := time.Unix(1381971600, 0)
-		fmt.Println(resp.Status)
-	*/
-
-	file, err := os.Open("res.json")
+    client := urlfetch.Client(ctx)
+	resp, err := client.Get(u)
 	if err != nil {
-		fmt.Printf("error open: %s\n", err)
-		os.Exit(1)
+		return nil, err
 	}
-
-	meetup, err := parseJSON(file)
-	if err != nil {
-		fmt.Printf("error decode: %s\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("%v\n", *meetup)
+	defer resp.Body.Close()
+	return parseJSON(resp.Body)
 }
