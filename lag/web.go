@@ -13,6 +13,12 @@ func redirect(from, to string) {
 
 func next(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
+	/* FIXME: memcache
+		1. Look data in memcache
+		2. Check if meetup passed, if so set nil
+		3. If nil, get meetup from api and store in memcache
+		   (using encoding/gob)
+	*/
 	mp, err := nextMeetup(ctx)
 	if err != nil {
 		fmt.Fprintf(w, "error: %s", err)
