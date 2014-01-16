@@ -9,9 +9,9 @@ body {
     font-size: 1.4em;
 }
 
-.header {
+header {
     background: rgb(230,230,230);
-    border-right: thin solid rgb(180,180,180);
+    /*border-right: thin solid rgb(180,180,180);*/
     border-bottom: thin solid rgb(180,180,180);
     padding: 0.5em;
     font-size: 1.9em;
@@ -20,9 +20,11 @@ body {
     color: #333;
 }
 
-article.maincontent {
-    padding: 0.8em;
+.maincontent {
+    padding: 1.0em;
     padding-left: 1.5em;
+
+    margin-top: 30px;
 
     font-weight: 400;
     font-family: 'Open Sans', serif;
@@ -30,9 +32,9 @@ article.maincontent {
 }
 
 .subheader {
-    border-top: thin solid rgb(180,180,180);
-    font-size: 0.8em;
-    padding: 1.3em;
+    /*border-top: thin solid rgb(180,180,180);*/
+    /*font-size: 0.8em;
+    padding: 1.3em;*/
     
 }
 
@@ -41,9 +43,10 @@ a:hover {
 }
 
 #logo {
-    position: relative;
+    /*position: relative;
     float: right;
-    top: 105px;
+    top: 105px;*/
+    margin-top: 10px;
 }
 
 ul {
