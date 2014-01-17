@@ -6,7 +6,7 @@ if [ -n "$st" ]; then
     exit 1
 fi
 
-/opt/google-appengine-go/appcfg.py update .
+~/go_appengine/appcfg.py update .
 git tag -f deployed
 git push
 git push --tags -f
